@@ -9,14 +9,14 @@ import java.text.*;
 import java.net.*;
 import java.io.*;
 
-public class Server implements ActionListener{
+public class Client implements ActionListener{
 	JTextField text;
-	JPanel a1;
+	static JPanel a1;
 	static Box vertical = Box.createVerticalBox();
-	static JFrame t = new JFrame();
 	static DataOutputStream dout;
+	static JFrame t = new JFrame();
 	
-	Server()
+	Client()
 	{
 		t.setLayout(null);
 		JPanel p1 = new JPanel();
@@ -25,7 +25,7 @@ public class Server implements ActionListener{
 		p1.setLayout(null);
 		t.add(p1);
 		
-		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/3.png"));
+		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/3 dots.png"));
 		Image i2 = i1.getImage().getScaledInstance(25,25,Image.SCALE_DEFAULT);
 		ImageIcon i3 = new ImageIcon(i2);
 		JLabel back = new JLabel(i3);
@@ -40,7 +40,7 @@ public class Server implements ActionListener{
 			}
 				});
 		
-		ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/Profile.png"));
+		ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/profile 2.png"));
 		Image i5 = i4.getImage().getScaledInstance(50,50,Image.SCALE_DEFAULT);
 		ImageIcon i6 = new ImageIcon(i5);
 		JLabel profile = new JLabel(i6);
@@ -61,14 +61,14 @@ public class Server implements ActionListener{
 		phone.setBounds(330,20,25,25);
 		p1.add(phone);
 		
-		ImageIcon i13 = new ImageIcon(ClassLoader.getSystemResource("icons/3icon.png"));
+		ImageIcon i13 = new ImageIcon(ClassLoader.getSystemResource("icons/left arrow.png"));
 		Image i14 = i13.getImage().getScaledInstance(10,20,Image.SCALE_DEFAULT);
 		ImageIcon i15 = new ImageIcon(i14);
 		JLabel morevert = new JLabel(i15);
 		morevert.setBounds(380,22,10,20);
 		p1.add(morevert);
 		
-		JLabel name = new JLabel("Aliya");
+		JLabel name = new JLabel("Virat");
 		name.setBounds(110, 15, 100,22);
 		name.setForeground(Color.WHITE);
 		name.setFont(new Font("SAN_SERIF",Font.BOLD,18));
@@ -100,7 +100,7 @@ public class Server implements ActionListener{
 		
 		
 		t.setSize(450,650);
-		t.setLocation(200,50);
+		t.setLocation(800,50);
 		t.setUndecorated(true);
 		t.getContentPane().setBackground(Color.WHITE);
 		t.setVisible(true);
@@ -108,7 +108,8 @@ public class Server implements ActionListener{
 	
 	public void actionPerformed(ActionEvent ae)
 	{
-		try {
+		try
+		{
 			String out = text.getText();
 			
 			JPanel p2 = formatLabel(out);
@@ -129,12 +130,14 @@ public class Server implements ActionListener{
 			t.invalidate();
 			t.validate();
 		}
-		catch(Exception e) {
+		catch(Exception e)
+		{
 			e.printStackTrace();
 		}
 		
 		
 	}
+		
 	
 	public static JPanel formatLabel(String out) {
 		
@@ -161,36 +164,34 @@ public class Server implements ActionListener{
 	}
 
 	public static void main(String[] args) {
-		new Server();
-		
-		try {
+		new Client();
+		try (Socket s = new Socket("127.0.0.1",6001)) {
 			
-			ServerSocket skt = new ServerSocket(6001);
+			DataInputStream din = new DataInputStream(s.getInputStream());
+			dout = new DataOutputStream(s.getOutputStream());
 			
+
 			while(true)
 			{
-				Socket s = skt.accept();
+				a1.setLayout(new BorderLayout());
+				String msg = din.readUTF();
+				JPanel panel = formatLabel(msg);
 				
-				DataInputStream din = new DataInputStream(s.getInputStream());
-				dout = new DataOutputStream(s.getOutputStream());
+				JPanel left = new JPanel(new BorderLayout());
+				left.add(panel,BorderLayout.LINE_START);
+				vertical.add(left);
+				vertical.add(Box.createVerticalStrut(15));
 				
-				while(true)
-				{
-					String msg = din.readUTF();
-					JPanel panel = formatLabel(msg);
-					
-					JPanel left = new JPanel(new BorderLayout());
-					left.add(panel,BorderLayout.LINE_START);
-					vertical.add(left);
-					t.validate();
-					
-				}
+				a1.add(vertical, BorderLayout.PAGE_START);
+				
+				t.validate();
+				
 			}
 			
 		}
-		catch(Exception e) {
+		catch(Exception e)
+		{
 			e.printStackTrace();
-			
 		}
 
 	}
