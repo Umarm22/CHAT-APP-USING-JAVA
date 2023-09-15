@@ -9,14 +9,14 @@ import java.text.*;
 import java.net.*;
 import java.io.*;
 
-public class Client implements ActionListener{
+public class Server implements ActionListener{
 	JTextField text;
-	static JPanel a1;
+	JPanel a1;
 	static Box vertical = Box.createVerticalBox();
-	static DataOutputStream dout;
 	static JFrame t = new JFrame();
+	static DataOutputStream dout;
 	
-	Client()
+	Server()
 	{
 		t.setLayout(null);
 		JPanel p1 = new JPanel();
@@ -40,7 +40,7 @@ public class Client implements ActionListener{
 			}
 				});
 		
-		ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/profile 2.png"));
+		ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/Profile 1.png"));
 		Image i5 = i4.getImage().getScaledInstance(50,50,Image.SCALE_DEFAULT);
 		ImageIcon i6 = new ImageIcon(i5);
 		JLabel profile = new JLabel(i6);
@@ -61,14 +61,14 @@ public class Client implements ActionListener{
 		phone.setBounds(330,20,25,25);
 		p1.add(phone);
 		
-		ImageIcon i13 = new ImageIcon(ClassLoader.getSystemResource("icons/left arrow.png"));
+		ImageIcon i13 = new ImageIcon(ClassLoader.getSystemResource("icons/profile 2.png"));
 		Image i14 = i13.getImage().getScaledInstance(10,20,Image.SCALE_DEFAULT);
 		ImageIcon i15 = new ImageIcon(i14);
 		JLabel morevert = new JLabel(i15);
 		morevert.setBounds(380,22,10,20);
 		p1.add(morevert);
 		
-		JLabel name = new JLabel("Virat");
+		JLabel name = new JLabel("Afrin");
 		name.setBounds(110, 15, 100,22);
 		name.setForeground(Color.WHITE);
 		name.setFont(new Font("SAN_SERIF",Font.BOLD,18));
@@ -100,7 +100,7 @@ public class Client implements ActionListener{
 		
 		
 		t.setSize(450,650);
-		t.setLocation(800,50);
+		t.setLocation(200,50);
 		t.setUndecorated(true);
 		t.getContentPane().setBackground(Color.WHITE);
 		t.setVisible(true);
@@ -108,8 +108,7 @@ public class Client implements ActionListener{
 	
 	public void actionPerformed(ActionEvent ae)
 	{
-		try
-		{
+		try {
 			String out = text.getText();
 			
 			JPanel p2 = formatLabel(out);
@@ -130,14 +129,12 @@ public class Client implements ActionListener{
 			t.invalidate();
 			t.validate();
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
 		
 	}
-		
 	
 	public static JPanel formatLabel(String out) {
 		
@@ -164,34 +161,34 @@ public class Client implements ActionListener{
 	}
 
 	public static void main(String[] args) {
-		new Client();
-		try (Socket s = new Socket("127.0.0.1",6001)) {
+		new Server();
+		
+		try (ServerSocket skt = new ServerSocket(6001)) {
 			
-			DataInputStream din = new DataInputStream(s.getInputStream());
-			dout = new DataOutputStream(s.getOutputStream());
-			
-
 			while(true)
 			{
-				a1.setLayout(new BorderLayout());
-				String msg = din.readUTF();
-				JPanel panel = formatLabel(msg);
+				Socket s = skt.accept();
 				
-				JPanel left = new JPanel(new BorderLayout());
-				left.add(panel,BorderLayout.LINE_START);
-				vertical.add(left);
-				vertical.add(Box.createVerticalStrut(15));
+				DataInputStream din = new DataInputStream(s.getInputStream());
+				dout = new DataOutputStream(s.getOutputStream());
 				
-				a1.add(vertical, BorderLayout.PAGE_START);
-				
-				t.validate();
-				
+				while(true)
+				{
+					String msg = din.readUTF();
+					JPanel panel = formatLabel(msg);
+					
+					JPanel left = new JPanel(new BorderLayout());
+					left.add(panel,BorderLayout.LINE_START);
+					vertical.add(left);
+					t.validate();
+					
+				}
 			}
 			
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			e.printStackTrace();
+			
 		}
 
 	}
