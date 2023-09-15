@@ -25,7 +25,7 @@ public class Client implements ActionListener{
 		p1.setLayout(null);
 		t.add(p1);
 		
-		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/3.png"));
+		ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/3 dots.png"));
 		Image i2 = i1.getImage().getScaledInstance(25,25,Image.SCALE_DEFAULT);
 		ImageIcon i3 = new ImageIcon(i2);
 		JLabel back = new JLabel(i3);
@@ -40,7 +40,7 @@ public class Client implements ActionListener{
 			}
 				});
 		
-		ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/i1.png"));
+		ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/profile 2.png"));
 		Image i5 = i4.getImage().getScaledInstance(50,50,Image.SCALE_DEFAULT);
 		ImageIcon i6 = new ImageIcon(i5);
 		JLabel profile = new JLabel(i6);
@@ -61,7 +61,7 @@ public class Client implements ActionListener{
 		phone.setBounds(330,20,25,25);
 		p1.add(phone);
 		
-		ImageIcon i13 = new ImageIcon(ClassLoader.getSystemResource("icons/3icon.png"));
+		ImageIcon i13 = new ImageIcon(ClassLoader.getSystemResource("icons/left arrow.png"));
 		Image i14 = i13.getImage().getScaledInstance(10,20,Image.SCALE_DEFAULT);
 		ImageIcon i15 = new ImageIcon(i14);
 		JLabel morevert = new JLabel(i15);
@@ -165,9 +165,7 @@ public class Client implements ActionListener{
 
 	public static void main(String[] args) {
 		new Client();
-		try {
-			
-			Socket s = new Socket("127.0.0.1",6001);
+		try (Socket s = new Socket("127.0.0.1",6001)) {
 			
 			DataInputStream din = new DataInputStream(s.getInputStream());
 			dout = new DataOutputStream(s.getOutputStream());
